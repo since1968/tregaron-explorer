@@ -17,6 +17,32 @@ const DEFAULT_VIEW = {
 };
 
 
+// helper function to fit map to screen
+function fitToGeoJSON(map, data, padding = 20) {
+  const bounds = new maplibregl.LngLatBounds();
+
+  data.features.forEach(feature => {
+    const geom = feature.geometry;
+
+    if (geom.type === 'Polygon') {
+      geom.coordinates.forEach(ring => {
+        ring.forEach(coord => bounds.extend(coord));
+      });
+    }
+
+    if (geom.type === 'MultiPolygon') {
+      geom.coordinates.forEach(polygon => {
+        polygon.forEach(ring => {
+          ring.forEach(coord => bounds.extend(coord));
+        });
+      });
+    }
+  });
+
+  map.fitBounds(bounds, { padding });
+}
+
+
 // add navigation controls
 map.addControl(new maplibregl.NavigationControl(), 'top-right');
 
@@ -70,13 +96,7 @@ map.on('load', () => {
       });
 
       // 👉 FIT TO BOUNDARY
-      const bounds = new maplibregl.LngLatBounds();
-
-      data.features[0].geometry.coordinates[0].forEach(coord => {
-        bounds.extend(coord);
-      });
-
-      map.fitBounds(bounds, { padding: 20 });
+	  fitToGeoJSON(map, data);
 
     });
 	
