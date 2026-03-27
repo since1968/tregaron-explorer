@@ -34,5 +34,37 @@ map.on('click', (e) => {
 
 // map loaded to console
 map.on('load', () => {
-console.log("Map loaded");
+	map.addSource('boundary', {
+	type: 'geojson',
+	data: 'data/processed/boundary.geojson'
+	});
+
+	map.addLayer({
+		id: 'boundary-fill',
+		type: 'fill',
+		source: 'boundary',
+		paint: {
+			'fill-color': '#66bb6a',
+			'fill-opacity': 0.2
+		}
+	});
+
+	map.addLayer({
+		id: 'boundary-outline',
+		type: 'line',
+		source: 'boundary',
+		paint: {
+			'line-color': '#1b5e20',
+			'line-width': 2
+		}
+	});
+
+
+
+
+
+console.log("Map loaded + boundary added");
+
 });
+
+
