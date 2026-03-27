@@ -23,6 +23,9 @@ map.addControl(new maplibregl.NavigationControl(), 'top-right');
 // add fullscreen control
 map.addControl(new maplibregl.FullscreenControl());
 
+
+
+
 // debugging
 // send long lat to console 
 map.on('click', (e) => {

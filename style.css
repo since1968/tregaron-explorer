@@ -9,3 +9,41 @@ body {
 	bottom: 0;
 	width: 100%;
 }
+
+
+// mobile
+@media (max-width: 600px) {
+
+	#legend {
+		bottom: 10px;
+		left: 10px;
+		font-size: 11px;
+		padding: 8px;
+	}
+
+	#controls {
+		top: 10px;
+		left: 10px;
+		font-size: 11px;
+		padding: 8px;
+	}
+
+}
+
+
+// improve tap targets
+#controls label {
+	padding: 4px 0;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.2);
+	margin-right: 6px;
+}
+
+// limit extreme tilt on mobile
+if (window.innerWidth < 600) {
+	map.easeTo({
+		pitch: 45
+		});
+}
