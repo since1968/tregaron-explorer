@@ -24,6 +24,66 @@ map.addControl(new maplibregl.NavigationControl(), 'top-right');
 map.addControl(new maplibregl.FullscreenControl());
 
 
+// add hover interaction
+map.on('mousemove', 'boundary-fill', () => {
+  map.getCanvas().style.cursor = 'pointer';
+});
+
+map.on('mouseleave', 'boundary-fill', () => {
+  map.getCanvas().style.cursor = '';
+});
+
+
+map.on('load', () => {
+
+  // load GeoJSON manually so we can use it
+  fetch('data/processed/boundary.geojson')
+    .then(res => res.json())
+    .then(data => {
+
+      // add source using loaded data
+      map.addSource('boundary', {
+        type: 'geojson',
+        data: data
+      });
+
+      // add fill layer
+      map.addLayer({
+        id: 'boundary-fill',
+        type: 'fill',
+        source: 'boundary',
+        paint: {
+          'fill-color': '#66bb6a',
+          'fill-opacity': 0.2
+        }
+      });
+
+      // add outline layer
+      map.addLayer({
+        id: 'boundary-outline',
+        type: 'line',
+        source: 'boundary',
+        paint: {
+          'line-color': '#1b5e20',
+          'line-width': 2
+        }
+      });
+
+      // 👉 FIT TO BOUNDARY
+      const bounds = new maplibregl.LngLatBounds();
+
+      data.features[0].geometry.coordinates[0].forEach(coord => {
+        bounds.extend(coord);
+      });
+
+      map.fitBounds(bounds, { padding: 20 });
+
+    });
+	
+	console.log("Map loaded + boundary added");
+	
+
+});
 
 
 // debugging
@@ -32,39 +92,9 @@ map.on('click', (e) => {
   console.log(e.lngLat);
 });
 
-// map loaded to console
-map.on('load', () => {
-	map.addSource('boundary', {
-	type: 'geojson',
-	data: 'data/processed/boundary.geojson'
-	});
 
-	map.addLayer({
-		id: 'boundary-fill',
-		type: 'fill',
-		source: 'boundary',
-		paint: {
-			'fill-color': '#66bb6a',
-			'fill-opacity': 0.2
-		}
-	});
-
-	map.addLayer({
-		id: 'boundary-outline',
-		type: 'line',
-		source: 'boundary',
-		paint: {
-			'line-color': '#1b5e20',
-			'line-width': 2
-		}
-	});
-
-
-
-
-
-console.log("Map loaded + boundary added");
-
+// add click feedback, will help with debugging
+map.on('click', 'boundary-fill', () => {
+  console.log('Boundary clicked');
 });
-
 
