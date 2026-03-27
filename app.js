@@ -1,3 +1,15 @@
+// MapTiler key
+// restricted to localhost and since1968.github.io
+// replace with your own key if you want to host on a different server
+const MAPTILER_API_KEY = 'fj08AS00kVLEQZB6UbUy';
+
+// import layer helpers
+import { addElevationLayer } from './layers/elevation.js';
+import { addBoundaryLayer } from './layers/boundary.js';
+
+// fit map to viewport only on first load
+let hasFittedToBoundary = false;
+
 // create the map
 const map = new maplibregl.Map({
   container: 'map',
@@ -43,6 +55,7 @@ function fitToGeoJSON(map, data, padding = 20) {
 }
 
 
+
 // add navigation controls
 map.addControl(new maplibregl.NavigationControl(), 'top-right');
 
@@ -60,50 +73,30 @@ map.on('mouseleave', 'boundary-fill', () => {
 });
 
 
-map.on('load', () => {
-
-  // load GeoJSON manually so we can use it
-  fetch('data/processed/boundary.geojson')
-    .then(res => res.json())
-    .then(data => {
-
-      // add source using loaded data
-      map.addSource('boundary', {
-        type: 'geojson',
-        data: data
-      });
-
-      // add fill layer
-      map.addLayer({
-        id: 'boundary-fill',
-        type: 'fill',
-        source: 'boundary',
-        paint: {
-          'fill-color': '#66bb6a',
-          'fill-opacity': 0.2
-        }
-      });
-
-      // add outline layer
-      map.addLayer({
-        id: 'boundary-outline',
-        type: 'line',
-        source: 'boundary',
-        paint: {
-          'line-color': '#1b5e20',
-          'line-width': 2
-        }
-      });
-
-      // 👉 FIT TO BOUNDARY
-	  fitToGeoJSON(map, data);
-
-    });
+map.on('load', async () => {
 	
+	const response = await fetch('./data/processed/boundary.geojson');
+	const geojson = await response.json();	
+	
+	addElevationLayer(map, {
+	    apiKey: MAPTILER_API_KEY,
+	    exaggeration: 1.2
+	  });	
+
+	  addBoundaryLayer(map, {
+	      data: geojson
+	    });
+
+
+	// fit to boundary but only fit once
+	if (!hasFittedToBoundary) {
+		fitToGeoJSON(map, geojson);
+		hasFittedToBoundary = true;
+	 };
 	console.log("Map loaded + boundary added");
-	
 
 });
+	
 
 
 // debugging
