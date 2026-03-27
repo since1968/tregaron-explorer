@@ -23,4 +23,9 @@ map.on('click', (e) => {
   console.log(e.lngLat);
 });
 
+// add navigation controls
+map.addControl(new maplibregl.NavigationControl(), 'top-right');
+
+// add fullscreen control
+map.addControl(new maplibregl.FullscreenControl());
 
