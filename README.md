@@ -58,6 +58,35 @@ tregaron-explorer/
 ├── TESTING.md
 
 
+### Data Structure Example
+
+
+├── data/
+│   ├── raw/                # Immutable source data (never edited)
+│   │   ├── tregaron-trails-raw.gpx
+│   │   └── *.gpx
+│   │
+│   ├── processed/          # Cleaned/converted data used by the app
+│   │   ├── trails.geojson
+│   │   └── *.geojson
+│   │
+│   ├── derived/            # Optional: computed outputs (snapped, simplified, merged)
+│   │   ├── trails-snapped.geojson
+│   │   └── trails-simplified.geojson
+│
+├── docs/
+│   ├── trail-validation.md   # Human-readable findings + screenshots
+│   └── decisions.md          # (Optional) Key project decisions over time
+│
+├── analysis/               # Scratch work / experiments (safe to delete)
+│   ├── qgis/               # QGIS project files (.qgz)
+│   ├── geojson/            # Temporary overlays
+│   └── notes.md
+│
+├── src/                    # Your app code (unchanged)
+│
+└── README.md
+
 ---
 
 ## Local Development
