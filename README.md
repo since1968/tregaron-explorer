@@ -2,6 +2,10 @@
 
 An interactive, mobile-first map of Tregaron Conservancy in Washington, DC.
 
+## Current Version
+
+v0.1 — Initial interactive map
+
 ## Overview
 
 Tregaron Explorer is a lightweight web map designed for use **while walking in the park**.
